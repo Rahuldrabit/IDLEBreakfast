@@ -150,16 +150,27 @@ public class Resturant extends JFrame {
 		mnNewMenu_6.add(mntmNewMenuItem_4);
 		
 		JMenu mnNewMenu_7 = new JMenu("Cart");
-		mnNewMenu_7.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Cart cart=new Cart();
-				cart.setVisible(true);
-			}
-		});
-		menuBar.add(mnNewMenu_7);
-		
-		JLabel lblNewLabel_2 = new JLabel("Lalbagh Kitchen");
+                mnNewMenu_7.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                                Cart cart=new Cart();
+                                cart.setVisible(true);
+                        }
+                });
+                menuBar.add(mnNewMenu_7);
+
+                JMenu mnNewMenu_8 = new JMenu("Home");
+                mnNewMenu_8.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                                HomePage home=new HomePage();
+                                home.setVisible(true);
+                                dispose();
+                        }
+                });
+                menuBar.add(mnNewMenu_8);
+
+                JLabel lblNewLabel_2 = new JLabel("Lalbagh Kitchen");
 		lblNewLabel_2.setBounds(224, 48, 89, 14);
 		panel_1.add(lblNewLabel_2);
 		
