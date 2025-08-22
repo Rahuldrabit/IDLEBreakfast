@@ -208,15 +208,26 @@ public class Food extends JFrame {
 				cart.setVisible(true);
 			}
 		});
-		mnNewMenu_7.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Cart cart=new Cart();
-				cart.setVisible(true);
-			}
-		});
-		menuBar.add(mnNewMenu_7);
-		
-		JLabel lblNewLabel_2 = new JLabel("Rice");
+                mnNewMenu_7.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                                Cart cart=new Cart();
+                                cart.setVisible(true);
+                        }
+                });
+                menuBar.add(mnNewMenu_7);
+
+                JMenu mnNewMenu_8 = new JMenu("Home");
+                mnNewMenu_8.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                                HomePage home=new HomePage();
+                                home.setVisible(true);
+                                dispose();
+                        }
+                });
+                menuBar.add(mnNewMenu_8);
+
+                JLabel lblNewLabel_2 = new JLabel("Rice");
 		lblNewLabel_2.setBounds(270, 48, 89, 14);
 		panel_1.add(lblNewLabel_2);
 		
