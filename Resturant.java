@@ -85,46 +85,64 @@ public class Resturant extends JFrame {
 		menuBar.setBounds(0, 0, 608, 37);
 		panel_1.add(menuBar);
 		
-		JMenu mnNewMenu_3 = new JMenu("User Information");
-		menuBar.add(mnNewMenu_3);
+               JMenu mnNewMenu_3 = new JMenu("User Information");
+               mnNewMenu_3.addMouseListener(new MouseAdapter() {
+                       @Override
+                       public void mouseClicked(MouseEvent e) {
+                               UserInfo user = new UserInfo();
+                               user.setVisible(true);
+                               dispose();
+                       }
+               });
+               menuBar.add(mnNewMenu_3);
 		
 		JMenu mnNewMenu = new JMenu("Resturant");
 		menuBar.add(mnNewMenu);
 		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("All");
-		mntmNewMenuItem_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				AllFood allfood=new AllFood();
-				allfood.setVisible(true);
-			}
-		});
-		mnNewMenu.add(mntmNewMenuItem_1);
+               JMenuItem mntmNewMenuItem_1 = new JMenuItem("All");
+               mntmNewMenuItem_1.addActionListener(new ActionListener() {
+                       public void actionPerformed(ActionEvent e) {
+                               AllResturant all = new AllResturant();
+                               all.setVisible(true);
+                               dispose();
+                       }
+               });
+               mnNewMenu.add(mntmNewMenuItem_1);
 		
 		JMenu mnNewMenu_1 = new JMenu("Food");
 		menuBar.add(mnNewMenu_1);
 		
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("All");
-		mntmNewMenuItem_3.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				AllFood allfood=new AllFood();
-				allfood.setVisible(true);
-			}
-		});
-		mntmNewMenuItem_3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				AllFood allfood=new AllFood();
-				allfood.setVisible(true);
-			}
-		});
-		mnNewMenu_1.add(mntmNewMenuItem_3);
+               JMenuItem mntmNewMenuItem_3 = new JMenuItem("All");
+               mntmNewMenuItem_3.addActionListener(new ActionListener() {
+                       public void actionPerformed(ActionEvent e) {
+                               AllFood allfood = new AllFood();
+                               allfood.setVisible(true);
+                               dispose();
+                       }
+               });
+               mnNewMenu_1.add(mntmNewMenuItem_3);
 		
-		JMenu mnNewMenu_2 = new JMenu("Account Information");
-		menuBar.add(mnNewMenu_2);
+               JMenu mnNewMenu_2 = new JMenu("Account Information");
+               mnNewMenu_2.addMouseListener(new MouseAdapter() {
+                       @Override
+                       public void mouseClicked(MouseEvent e) {
+                               AccountInfo acc = new AccountInfo();
+                               acc.setVisible(true);
+                               dispose();
+                       }
+               });
+               menuBar.add(mnNewMenu_2);
 		
-		JMenu mnNewMenu_4 = new JMenu("Package Details");
-		menuBar.add(mnNewMenu_4);
+               JMenu mnNewMenu_4 = new JMenu("Package Details");
+               mnNewMenu_4.addMouseListener(new MouseAdapter() {
+                       @Override
+                       public void mouseClicked(MouseEvent e) {
+                               PackageInfo pac = new PackageInfo();
+                               pac.setVisible(true);
+                               dispose();
+                       }
+               });
+               menuBar.add(mnNewMenu_4);
 		
 		JMenu mnNewMenu_5 = new JMenu("Log out");
 		mnNewMenu_5.addMouseListener(new MouseAdapter() {

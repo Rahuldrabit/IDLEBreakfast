@@ -97,17 +97,31 @@ public class AllResturant extends JFrame {
 		});
 		menuBar.add(mnNewMenu_3);
 		
-		JMenu mnNewMenu = new JMenu("Resturant");
-		menuBar.add(mnNewMenu);
-		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("All");
-		mnNewMenu.add(mntmNewMenuItem_1);
+                JMenu mnNewMenu = new JMenu("Resturant");
+                menuBar.add(mnNewMenu);
+
+               JMenuItem mntmNewMenuItem_1 = new JMenuItem("All");
+               mntmNewMenuItem_1.addActionListener(new ActionListener() {
+                       public void actionPerformed(ActionEvent e) {
+                               AllResturant all = new AllResturant();
+                               all.setVisible(true);
+                               dispose();
+                       }
+               });
+               mnNewMenu.add(mntmNewMenuItem_1);
 		
 		JMenu mnNewMenu_1 = new JMenu("Food");
 		menuBar.add(mnNewMenu_1);
 		
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("All");
-		mnNewMenu_1.add(mntmNewMenuItem_3);
+               JMenuItem mntmNewMenuItem_3 = new JMenuItem("All");
+               mntmNewMenuItem_3.addActionListener(new ActionListener() {
+                       public void actionPerformed(ActionEvent e) {
+                               AllFood all = new AllFood();
+                               all.setVisible(true);
+                               dispose();
+                       }
+               });
+               mnNewMenu_1.add(mntmNewMenuItem_3);
 		
 		JMenu mnNewMenu_2 = new JMenu("Account Information");
 		mnNewMenu_2.addMouseListener(new MouseAdapter() {
