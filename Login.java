@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
+import java.util.Properties;
 
 public class Login extends JFrame {
 
@@ -76,30 +78,38 @@ public class Login extends JFrame {
 		pswd.setBounds(167, 204, 163, 20);
 		contentPane.add(pswd);
 		
-		JButton btnNewButton = new JButton("Login");
-		btnNewButton.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            Class.forName("com.mysql.jdbc.Driver");
-		            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/idlecenter", "root", "my1234sl");
-		                 Statement stmt = con.createStatement()) {
-
-		                String sql = "select * from userinfo where username='" + txtUserName.getText() + "' and passwords='" + pswd.getText().toString() + "'";
-		                try (ResultSet rs = stmt.executeQuery(sql)) {
-		                    if (rs.next()) {
-		                        JOptionPane.showMessageDialog(null, "Login Successfully");
-		                        HomePage home = new HomePage();
-		                        home.setVisible(true);
-		                    } else {
-		                        JOptionPane.showMessageDialog(null, "Invalid");
-		                    }
-		                }
-		            }
-		        } catch (Exception ex) {
-		            System.out.print(ex);
-		        }
-		    }
-		});
+                JButton btnNewButton = new JButton("Login");
+                btnNewButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            Properties props = new Properties();
+                            try (FileInputStream fis = new FileInputStream("db.properties")) {
+                                props.load(fis);
+                            }
+                            try (Connection con = DriverManager.getConnection(
+                                        props.getProperty("db.url"),
+                                        props.getProperty("db.username"),
+                                        props.getProperty("db.password"));
+                                 PreparedStatement stmt = con.prepareStatement(
+                                        "SELECT * FROM userinfo WHERE username = ? AND passwords = ?")) {
+                                stmt.setString(1, txtUserName.getText());
+                                stmt.setString(2, String.valueOf(pswd.getPassword()));
+                                try (ResultSet rs = stmt.executeQuery()) {
+                                    if (rs.next()) {
+                                        JOptionPane.showMessageDialog(null, "Login Successfully");
+                                        HomePage home = new HomePage();
+                                        home.setVisible(true);
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Invalid");
+                                    }
+                                }
+                            }
+                        } catch (Exception ex) {
+                            System.out.print(ex);
+                        }
+                    }
+                });
 		btnNewButton.setBounds(149, 271, 89, 23);
 		contentPane.add(btnNewButton);
 
