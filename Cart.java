@@ -10,23 +10,44 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import java.sql.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
+
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.CompoundBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.table.DefaultTableModel;
+import javax.swing.border.CompoundBorder;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+
 public class Cart extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField textField;
-	private JTable table;
+private static final long serialVersionUID = 1L;
+private JPanel contentPane;
+private JTextField textField;
+private JTable table;
+private DefaultTableModel model;
+private JLabel lblTotalAmount;
+private JLabel lblAccountBalance;
+private double accountBalance = 1000.0;
 
 	/**
 	 * Launch the application.
@@ -79,6 +100,31 @@ public class Cart extends JFrame {
 		JButton btnNewButton = new JButton("Search");
 		btnNewButton.setBounds(460, 56, 89, 23);
 		panel.add(btnNewButton);
+                btnNewButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String user = textField.getText().trim();
+                        if (user.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Please enter a search term.");
+                            return;
+                        }
+                        try {
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/idlecenter", "root", "my1234sl");
+                                 PreparedStatement stmt = con.prepareStatement("SELECT * FROM cart WHERE username = ?")) {
+                                stmt.setString(1, user);
+                                try (ResultSet rs = stmt.executeQuery()) {
+                                    if (rs.next()) {
+                                        JOptionPane.showMessageDialog(null, "Cart entries found for " + user);
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "No cart entries found for " + user);
+                                    }
+                                }
+                            }
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+                        }
+                    }
+                });
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(0, 98, 641, 513);
@@ -171,47 +217,89 @@ public class Cart extends JFrame {
 		lblNewLabel_2.setBounds(270, 48, 89, 14);
 		panel_1.add(lblNewLabel_2);
 		
-		JButton btnNewButton_1 = new JButton("Order");
-		btnNewButton_1.setBounds(116, 459, 89, 23);
-		panel_1.add(btnNewButton_1);
-		
-		JButton btnNewButton_1_1 = new JButton("Delete from Cart");
-		btnNewButton_1_1.setBounds(304, 459, 165, 23);
-		panel_1.add(btnNewButton_1_1);
-		
-		table = new JTable();
-		table.setForeground(new Color(0, 0, 0));
-		table.setFont(new Font("Segoe UI Semilight", Font.PLAIN, 14));
-		table.setBackground(new Color(255, 0, 0));
-		table.setBorder(new CompoundBorder());
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-			},
-			new String[] {
-				"Serial", "Food Name", "Resturant Name", "Quantity", "Price"
-			}
-		));
-		table.setBounds(29, 81, 541, 204);
-		panel_1.add(table);
-		
-		JLabel lblNewLabel_3 = new JLabel("Total Amount");
-		lblNewLabel_3.setBounds(162, 311, 89, 14);
-		panel_1.add(lblNewLabel_3);
-		
-		JLabel lblNewLabel_4 = new JLabel("150 Taka");
-		lblNewLabel_4.setBounds(310, 311, 49, 14);
-		panel_1.add(lblNewLabel_4);
-		
-		JLabel lblNewLabel_3_1 = new JLabel("Account Balance");
-		lblNewLabel_3_1.setBounds(162, 345, 89, 14);
-		panel_1.add(lblNewLabel_3_1);
-		
-		JLabel lblNewLabel_4_1 = new JLabel("1000 Taka");
-		lblNewLabel_4_1.setBounds(310, 345, 62, 14);
-		panel_1.add(lblNewLabel_4_1);
+               JButton btnNewButton_1 = new JButton("Order");
+               btnNewButton_1.setBounds(116, 459, 89, 23);
+               panel_1.add(btnNewButton_1);
+
+               JButton btnNewButton_1_1 = new JButton("Delete from Cart");
+               btnNewButton_1_1.setBounds(304, 459, 165, 23);
+               panel_1.add(btnNewButton_1_1);
+
+               table = new JTable();
+               table.setForeground(new Color(0, 0, 0));
+               table.setFont(new Font("Segoe UI Semilight", Font.PLAIN, 14));
+               table.setBackground(new Color(255, 0, 0));
+               table.setBorder(new CompoundBorder());
+               model = new DefaultTableModel(
+                               new Object[] {
+                                               "Serial", "Food Name", "Resturant Name", "Quantity", "Price"
+                               }, 0);
+               table.setModel(model);
+               table.setBounds(29, 81, 541, 204);
+               panel_1.add(table);
+
+               JLabel lblNewLabel_3 = new JLabel("Total Amount");
+               lblNewLabel_3.setBounds(162, 311, 89, 14);
+               panel_1.add(lblNewLabel_3);
+
+               lblTotalAmount = new JLabel("0 Taka");
+               lblTotalAmount.setBounds(310, 311, 100, 14);
+               panel_1.add(lblTotalAmount);
+
+               JLabel lblNewLabel_3_1 = new JLabel("Account Balance");
+               lblNewLabel_3_1.setBounds(162, 345, 89, 14);
+               panel_1.add(lblNewLabel_3_1);
+
+               lblAccountBalance = new JLabel(accountBalance + " Taka");
+               lblAccountBalance.setBounds(310, 345, 100, 14);
+               panel_1.add(lblAccountBalance);
+
+               btnNewButton_1.addActionListener(new ActionListener() {
+                       @Override
+                       public void actionPerformed(ActionEvent e) {
+                               double total = calculateTotal();
+                               if (total == 0) {
+                                       JOptionPane.showMessageDialog(Cart.this, "Cart is empty");
+                                       return;
+                               }
+                               if (total > accountBalance) {
+                                       JOptionPane.showMessageDialog(Cart.this, "Insufficient balance");
+                                       return;
+                               }
+                               try (PrintWriter out = new PrintWriter(new FileWriter("orders.txt", true))) {
+                                       for (int i = 0; i < model.getRowCount(); i++) {
+                                               Object food = model.getValueAt(i, 1);
+                                               if (food == null) {
+                                                       continue;
+                                               }
+                                               Object serial = model.getValueAt(i, 0);
+                                               Object rest = model.getValueAt(i, 2);
+                                               Object qty = model.getValueAt(i, 3);
+                                               Object price = model.getValueAt(i, 4);
+                                               out.println(serial + "," + food + "," + rest + "," + qty + "," + price);
+                                       }
+                               } catch (IOException ex) {
+                                       JOptionPane.showMessageDialog(Cart.this, "Unable to save order");
+                                       return;
+                               }
+                               accountBalance -= total;
+                               lblAccountBalance.setText(accountBalance + " Taka");
+                               model.setRowCount(0);
+                               updateTotal();
+                               JOptionPane.showMessageDialog(Cart.this, "Order placed successfully");
+                       }
+               });
+
+               btnNewButton_1_1.addActionListener(new ActionListener() {
+                       @Override
+                       public void actionPerformed(ActionEvent e) {
+                               int[] rows = table.getSelectedRows();
+                               for (int i = rows.length - 1; i >= 0; i--) {
+                                       model.removeRow(rows[i]);
+                               }
+                               updateTotal();
+                       }
+               });
 		
 		JLabel lblNewLabel_5 = new JLabel("Order this Item regularly for next one");
 		lblNewLabel_5.setBounds(140, 392, 232, 14);
@@ -225,11 +313,34 @@ public class Cart extends JFrame {
 		chckbxNewCheckBox.setBounds(113, 388, 21, 23);
 		panel_1.add(chckbxNewCheckBox);
 		
-		JRadioButton rdbtnMounth = new JRadioButton("month");
-		rdbtnMounth.setBounds(439, 388, 62, 23);
-		panel_1.add(rdbtnMounth);
-		
-		
-		
-	}
+               JRadioButton rdbtnMounth = new JRadioButton("month");
+               rdbtnMounth.setBounds(439, 388, 62, 23);
+               panel_1.add(rdbtnMounth);
+
+
+
+       }
+
+       private void updateTotal() {
+               double total = calculateTotal();
+               lblTotalAmount.setText(total + " Taka");
+       }
+
+       private double calculateTotal() {
+               double total = 0;
+               for (int i = 0; i < model.getRowCount(); i++) {
+                       Object qtyObj = model.getValueAt(i, 3);
+                       Object priceObj = model.getValueAt(i, 4);
+                       if (qtyObj != null && priceObj != null) {
+                               try {
+                                       double qty = Double.parseDouble(qtyObj.toString());
+                                       double price = Double.parseDouble(priceObj.toString());
+                                       total += qty * price;
+                               } catch (NumberFormatException ex) {
+                                       // ignore invalid numbers
+                               }
+                       }
+               }
+               return total;
+       }
 }
