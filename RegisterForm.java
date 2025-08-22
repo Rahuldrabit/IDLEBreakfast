@@ -116,30 +116,33 @@ public class RegisterForm extends JFrame {
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            Class.forName("com.mysql.jdbc.Driver");
-		            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/idlecenter", "root", "my1234sl");
-		                 Statement stmt = con.createStatement()) {
+                        try {
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/idlecenter", "root", "my1234sl");
+                                 PreparedStatement stmt = con.prepareStatement(
+                                         "INSERT INTO userinfo (username, fname, mname, lname, passwords, mobileno) VALUES (?,?,?,?,?,?)")) {
+                                stmt.setString(1, txtusername.getText());
+                                stmt.setString(2, txtfname.getText());
+                                stmt.setString(3, txtmname.getText());
+                                stmt.setString(4, txtlname.getText());
+                                stmt.setString(5, String.valueOf(passwordpswd.getPassword()));
+                                stmt.setString(6, txtmno.getText());
 
-		                String sql = "INSERT INTO userinfo (username, fname, mname, lname, passwords, mobileno) VALUES "
-		                        + "('" + txtusername.getText() + "','" + txtfname.getText() + "','" + txtmname.getText() + "','"
-		                        + txtlname.getText() + "','" + new String(passwordpswd.getPassword()) + "','" + txtmno.getText() + "')";
+                                int rowsAffected = stmt.executeUpdate();
 
-		                int rowsAffected = stmt.executeUpdate(sql);
-
-		                if (rowsAffected > 0) {
-		                    JOptionPane.showMessageDialog(null, "Data inserted successfully");
-		                    Login lg=new Login();
-		                    lg.setVisible(true);
-		                } else {
-		                    JOptionPane.showMessageDialog(null, "Failed to insert data");
-		                }
-		            }
-		        } catch (Exception ex) {
-		            ex.printStackTrace();
-		        }
-		    }
-		});
+                                if (rowsAffected > 0) {
+                                    JOptionPane.showMessageDialog(null, "Data inserted successfully");
+                                    Login lg=new Login();
+                                    lg.setVisible(true);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Failed to insert data");
+                                }
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
 		btnSubmit.setBounds(169, 336, 89, 23);
 		contentPane.add(btnSubmit);
 

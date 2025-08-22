@@ -40,13 +40,14 @@ Based on the detected files, the project likely supports:
    ```
 
 2. **Compile the code:**
+   Ensure the packaged classes are placed in a separate build directory:
    ```bash
-   javac *.java
+   javac -d build *.java
    ```
 
 3. **Run the application:**
    ```bash
-   java main
+   java -cp build ass1.main
    ```
 
 > Adjust the class name if the main entry point differs.
