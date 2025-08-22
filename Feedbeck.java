@@ -20,6 +20,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.CompoundBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 
 public class Feedbeck extends JFrame {
 
@@ -178,12 +184,53 @@ public class Feedbeck extends JFrame {
 		panel_1.add(textField_1);
 		textField_1.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(237, 135, 278, 171);
-		panel_1.add(textField_2);
-		
-		
-		
-	}
+                textField_2 = new JTextField();
+                textField_2.setColumns(10);
+                textField_2.setBounds(237, 135, 278, 171);
+                panel_1.add(textField_2);
+
+                JButton btnSubmit = new JButton("Submit");
+                btnSubmit.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                                String username = textField.getText();
+                                String email = textField_1.getText();
+                                String feedback = textField_2.getText();
+
+                                if (username.isEmpty() || email.isEmpty() || feedback.isEmpty()) {
+                                        JOptionPane.showMessageDialog(null, "Please fill all fields");
+                                        return;
+                                }
+
+                                try {
+                                        Class.forName("com.mysql.cj.jdbc.Driver");
+                                        try (Connection con = DriverManager.getConnection(
+                                                        "jdbc:mysql://localhost:3306/idlecenter", "root", "my1234sl");
+                                                PreparedStatement stmt = con.prepareStatement(
+                                                                "INSERT INTO feedback (username, email, feedback) VALUES (?,?,?)")) {
+                                                stmt.setString(1, username);
+                                                stmt.setString(2, email);
+                                                stmt.setString(3, feedback);
+
+                                                int rowsAffected = stmt.executeUpdate();
+
+                                                if (rowsAffected > 0) {
+                                                        JOptionPane.showMessageDialog(null,
+                                                                        "Feedback submitted successfully");
+                                                        textField.setText("");
+                                                        textField_1.setText("");
+                                                        textField_2.setText("");
+                                                } else {
+                                                        JOptionPane.showMessageDialog(null,
+                                                                        "Failed to submit feedback");
+                                                }
+                                        }
+                                } catch (Exception ex) {
+                                        JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+                                }
+                        }
+                });
+                btnSubmit.setBounds(237, 317, 89, 23);
+                panel_1.add(btnSubmit);
+
+        }
 }
