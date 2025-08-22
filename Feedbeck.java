@@ -10,6 +10,10 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import java.sql.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -80,6 +84,31 @@ public class Feedbeck extends JFrame {
 		JButton btnNewButton = new JButton("Search");
 		btnNewButton.setBounds(460, 56, 89, 23);
 		panel.add(btnNewButton);
+                btnNewButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String user = textField.getText().trim();
+                        if (user.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Please enter a search term.");
+                            return;
+                        }
+                        try {
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/idlecenter", "root", "my1234sl");
+                                 PreparedStatement stmt = con.prepareStatement("SELECT * FROM feedbeck WHERE username = ?")) {
+                                stmt.setString(1, user);
+                                try (ResultSet rs = stmt.executeQuery()) {
+                                    if (rs.next()) {
+                                        JOptionPane.showMessageDialog(null, "Feedback found for " + user);
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "No feedback found for " + user);
+                                    }
+                                }
+                            }
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+                        }
+                    }
+                });
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(0, 102, 654, 372);
