@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import java.sql.*;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -78,6 +80,31 @@ public class Food extends JFrame {
 		JButton btnNewButton = new JButton("Search");
 		btnNewButton.setBounds(460, 56, 89, 23);
 		panel.add(btnNewButton);
+                btnNewButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String text = textField.getText().trim();
+                        if (text.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Please enter a search term.");
+                            return;
+                        }
+                        try {
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/idlecenter", "root", "my1234sl");
+                                 PreparedStatement stmt = con.prepareStatement("SELECT * FROM food WHERE name = ?")) {
+                                stmt.setString(1, text);
+                                try (ResultSet rs = stmt.executeQuery()) {
+                                    if (rs.next()) {
+                                        JOptionPane.showMessageDialog(null, "Food found: " + text);
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "No food found for " + text);
+                                    }
+                                }
+                            }
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+                        }
+                    }
+                });
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(0, 99, 608, 496);
@@ -181,15 +208,26 @@ public class Food extends JFrame {
 				cart.setVisible(true);
 			}
 		});
-		mnNewMenu_7.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Cart cart=new Cart();
-				cart.setVisible(true);
-			}
-		});
-		menuBar.add(mnNewMenu_7);
-		
-		JLabel lblNewLabel_2 = new JLabel("Rice");
+                mnNewMenu_7.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                                Cart cart=new Cart();
+                                cart.setVisible(true);
+                        }
+                });
+                menuBar.add(mnNewMenu_7);
+
+                JMenu mnNewMenu_8 = new JMenu("Home");
+                mnNewMenu_8.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                                HomePage home=new HomePage();
+                                home.setVisible(true);
+                                dispose();
+                        }
+                });
+                menuBar.add(mnNewMenu_8);
+
+                JLabel lblNewLabel_2 = new JLabel("Rice");
 		lblNewLabel_2.setBounds(270, 48, 89, 14);
 		panel_1.add(lblNewLabel_2);
 		
