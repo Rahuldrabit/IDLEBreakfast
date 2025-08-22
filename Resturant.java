@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import java.sql.*;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -75,6 +77,32 @@ public class Resturant extends JFrame {
 		JButton btnNewButton = new JButton("Search");
 		btnNewButton.setBounds(460, 56, 89, 23);
 		panel.add(btnNewButton);
+                btnNewButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String text = textField.getText().trim();
+                        if (text.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Please enter a search term.");
+                            return;
+                        }
+                        try {
+                            Class.forName("com.mysql.cj.jdbc.Driver");
+                            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/idlecenter", "root", "my1234sl");
+                                 PreparedStatement stmt = con.prepareStatement("SELECT * FROM food WHERE name = ?")) {
+                                stmt.setString(1, text);
+                                try (ResultSet rs = stmt.executeQuery()) {
+                                    if (rs.next()) {
+                                        Food food = new Food();
+                                        food.setVisible(true);
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "No food found for " + text);
+                                    }
+                                }
+                            }
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+                        }
+                    }
+                });
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(0, 99, 608, 496);
@@ -85,81 +113,105 @@ public class Resturant extends JFrame {
 		menuBar.setBounds(0, 0, 608, 37);
 		panel_1.add(menuBar);
 		
-		JMenu mnNewMenu_3 = new JMenu("User Information");
-		menuBar.add(mnNewMenu_3);
+               JMenu mnNewMenu_3 = new JMenu("User Information");
+               mnNewMenu_3.addMouseListener(new MouseAdapter() {
+                       @Override
+                       public void mouseClicked(MouseEvent e) {
+                               UserInfo user = new UserInfo();
+                               user.setVisible(true);
+                               dispose();
+                       }
+               });
+               menuBar.add(mnNewMenu_3);
 		
 		JMenu mnNewMenu = new JMenu("Resturant");
 		menuBar.add(mnNewMenu);
 		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("All");
-		mntmNewMenuItem_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				AllFood allfood=new AllFood();
-				allfood.setVisible(true);
-			}
-		});
-		mnNewMenu.add(mntmNewMenuItem_1);
+               JMenuItem mntmNewMenuItem_1 = new JMenuItem("All");
+               mntmNewMenuItem_1.addActionListener(new ActionListener() {
+                       public void actionPerformed(ActionEvent e) {
+                               AllResturant all = new AllResturant();
+                               all.setVisible(true);
+                               dispose();
+                       }
+               });
+               mnNewMenu.add(mntmNewMenuItem_1);
 		
 		JMenu mnNewMenu_1 = new JMenu("Food");
 		menuBar.add(mnNewMenu_1);
 		
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("All");
-		mntmNewMenuItem_3.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				AllFood allfood=new AllFood();
-				allfood.setVisible(true);
-			}
-		});
-		mntmNewMenuItem_3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				AllFood allfood=new AllFood();
-				allfood.setVisible(true);
-			}
-		});
-		mnNewMenu_1.add(mntmNewMenuItem_3);
+               JMenuItem mntmNewMenuItem_3 = new JMenuItem("All");
+               mntmNewMenuItem_3.addActionListener(new ActionListener() {
+                       public void actionPerformed(ActionEvent e) {
+                               AllFood allfood = new AllFood();
+                               allfood.setVisible(true);
+                               dispose();
+                       }
+               });
+               mnNewMenu_1.add(mntmNewMenuItem_3);
 		
-		JMenu mnNewMenu_2 = new JMenu("Account Information");
-		menuBar.add(mnNewMenu_2);
+               JMenu mnNewMenu_2 = new JMenu("Account Information");
+               mnNewMenu_2.addMouseListener(new MouseAdapter() {
+                       @Override
+                       public void mouseClicked(MouseEvent e) {
+                               AccountInfo acc = new AccountInfo();
+                               acc.setVisible(true);
+                               dispose();
+                       }
+               });
+               menuBar.add(mnNewMenu_2);
 		
-		JMenu mnNewMenu_4 = new JMenu("Package Details");
-		menuBar.add(mnNewMenu_4);
+               JMenu mnNewMenu_4 = new JMenu("Package Details");
+               mnNewMenu_4.addMouseListener(new MouseAdapter() {
+                       @Override
+                       public void mouseClicked(MouseEvent e) {
+                               PackageInfo pac = new PackageInfo();
+                               pac.setVisible(true);
+                               dispose();
+                       }
+               });
+               menuBar.add(mnNewMenu_4);
 		
-		JMenu mnNewMenu_5 = new JMenu("Log out");
-		mnNewMenu_5.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Login login=new Login();
-				login.setVisible(true);
-			}
-		});
-		menuBar.add(mnNewMenu_5);
+                JMenu mnNewMenu_5 = new JMenu("Log out");
+                mnNewMenu_5.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                                Login login=new Login();
+                                login.setVisible(true);
+                                dispose();
+                        }
+                });
+                menuBar.add(mnNewMenu_5);
 		
 		JMenu mnNewMenu_6 = new JMenu("Feedbeck");
 		menuBar.add(mnNewMenu_6);
+
+                JMenuItem mntmNewMenuItem_4 = new JMenuItem("Feedbeck Resturant");
+                mntmNewMenuItem_4.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                                Feedbeck feedbeck=new Feedbeck();
+                                feedbeck.setVisible(true);
+                                dispose();
+                        }
+                });
+                mnNewMenu_6.add(mntmNewMenuItem_4);
 		
-		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Feedbeck Resturant");
-		mntmNewMenuItem_4.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Feedbeck feedbeck=new Feedbeck();
-				feedbeck.setVisible(true);
-			}
-		});
-		mnNewMenu_6.add(mntmNewMenuItem_4);
-		
-		JMenu mnNewMenu_7 = new JMenu("Cart");
-		mnNewMenu_7.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Cart cart=new Cart();
-				cart.setVisible(true);
-			}
-		});
-		menuBar.add(mnNewMenu_7);
+                JMenu mnNewMenu_7 = new JMenu("Cart");
+
+                mnNewMenu_7.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                                Cart cart=new Cart();
+                                cart.setVisible(true);
+
+                                dispose();
+                        }
+                });
+                menuBar.add(mnNewMenu_7);
 		
 		JLabel lblNewLabel_2 = new JLabel("Lalbagh Kitchen");
+
 		lblNewLabel_2.setBounds(224, 48, 89, 14);
 		panel_1.add(lblNewLabel_2);
 		
@@ -191,17 +243,18 @@ public class Resturant extends JFrame {
 		lblNewLabel_4.setBounds(240, 11, 49, 14);
 		panel_3.add(lblNewLabel_4);
 		
-		JPanel panel_4 = new JPanel();
-		panel_4.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Food food=new Food();
-				food.setVisible(true);
-			}
-		});
-		panel_4.setBounds(36, 66, 125, 146);
-		panel_3.add(panel_4);
-		panel_4.setLayout(null);
+                JPanel panel_4 = new JPanel();
+                panel_4.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                                Food food=new Food();
+                                food.setVisible(true);
+                                dispose();
+                        }
+                });
+                panel_4.setBounds(36, 66, 125, 146);
+                panel_3.add(panel_4);
+                panel_4.setLayout(null);
 		
 		JLabel lblNewLabel_5 = new JLabel("Rice");
 		lblNewLabel_5.setBounds(33, 121, 49, 14);

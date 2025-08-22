@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IDLE Breakfast</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>IDLE Breakfast</h1>
+    <nav>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+  </header>
+  <main id="item-list"></main>
+  <script src="app.js"></script>
+  <script>
+    renderItemList();
+    updateCartCount();
+  </script>
+</body>
+</html>
