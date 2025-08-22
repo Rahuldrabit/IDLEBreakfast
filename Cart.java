@@ -218,25 +218,22 @@ private double accountBalance = 1000.0;
 		menuBar.add(mnNewMenu_6);
 		
 
-               JMenuItem mntmNewMenuItem_4 = new JMenuItem("Feedbeck Resturant");
-               mntmNewMenuItem_4.addActionListener(new ActionListener() {
-                       public void actionPerformed(ActionEvent e) {
-                               Feedbeck feedbeck = new Feedbeck();
-                               feedbeck.setVisible(true);
-                               dispose();
-                       }
-               });
-               mnNewMenu_6.add(mntmNewMenuItem_4);
-
-               JMenuItem mntmNewMenuItem_4 = new JMenuItem("Feedbeck Resturant");
-               mntmNewMenuItem_4.addMouseListener(new MouseAdapter() {
-                       @Override
-                       public void mouseClicked(MouseEvent e) {
-                               Feedbeck feedbeck = new Feedbeck();
-                               feedbeck.setVisible(true);
-                       }
-               });
-               mnNewMenu_6.add(mntmNewMenuItem_4);
+JMenuItem mntmNewMenuItem_4 = new JMenuItem("Feedbeck Resturant");
+mntmNewMenuItem_4.addActionListener(new ActionListener() {
+public void actionPerformed(ActionEvent e) {
+Feedbeck feedbeck = new Feedbeck();
+feedbeck.setVisible(true);
+dispose();
+}
+});
+mntmNewMenuItem_4.addMouseListener(new MouseAdapter() {
+@Override
+public void mouseClicked(MouseEvent e) {
+Feedbeck feedbeck = new Feedbeck();
+feedbeck.setVisible(true);
+}
+});
+mnNewMenu_6.add(mntmNewMenuItem_4);
 
 		
 		JMenu mnNewMenu_7 = new JMenu("Cart");
