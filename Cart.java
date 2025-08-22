@@ -20,6 +20,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
+
+import javax.swing.table.DefaultTableModel;
+import javax.swing.border.CompoundBorder;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.CompoundBorder;
 import java.awt.event.MouseAdapter;
@@ -30,6 +36,7 @@ import javax.swing.JOptionPane;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
 
 public class Cart extends JFrame {
 
@@ -183,8 +190,15 @@ private double accountBalance = 1000.0;
 		JMenu mnNewMenu_6 = new JMenu("Feedbeck");
 		menuBar.add(mnNewMenu_6);
 		
-		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Feedbeck Resturant");
-		mnNewMenu_6.add(mntmNewMenuItem_4);
+               JMenuItem mntmNewMenuItem_4 = new JMenuItem("Feedbeck Resturant");
+               mntmNewMenuItem_4.addMouseListener(new MouseAdapter() {
+                       @Override
+                       public void mouseClicked(MouseEvent e) {
+                               Feedbeck feedbeck = new Feedbeck();
+                               feedbeck.setVisible(true);
+                       }
+               });
+               mnNewMenu_6.add(mntmNewMenuItem_4);
 		
 		JMenu mnNewMenu_7 = new JMenu("Cart");
 		menuBar.add(mnNewMenu_7);
