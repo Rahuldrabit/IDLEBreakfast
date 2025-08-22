@@ -20,6 +20,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.CompoundBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Cart extends JFrame {
 
@@ -144,8 +146,14 @@ public class Cart extends JFrame {
 		JMenu mnNewMenu_6 = new JMenu("Feedbeck");
 		menuBar.add(mnNewMenu_6);
 		
-		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Feedbeck Resturant");
-		mnNewMenu_6.add(mntmNewMenuItem_4);
+               JMenuItem mntmNewMenuItem_4 = new JMenuItem("Feedbeck Resturant");
+               mntmNewMenuItem_4.addActionListener(new ActionListener() {
+                       public void actionPerformed(ActionEvent e) {
+                               Feedbeck feedbeck = new Feedbeck();
+                               feedbeck.setVisible(true);
+                       }
+               });
+               mnNewMenu_6.add(mntmNewMenuItem_4);
 		
 		JMenu mnNewMenu_7 = new JMenu("Cart");
 		menuBar.add(mnNewMenu_7);
